@@ -1,0 +1,238 @@
+<Page
+    x:Class="Aura_Gallery.Views.CollectionPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:models="using:Aura_Gallery.Models"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+
+        <!-- ACRYLIC BRUSH: used by all floating panels, no tint just blur -->
+        <AcrylicBrush x:Key="PanelAcrylicBrush"
+                      TintColor="Black"
+                      TintOpacity="0"
+                      TintLuminosityOpacity="0.0"
+                      FallbackColor="#CC383838"/>
+
+        <!-- THUMBNAIL TEMPLATE: one photo tile in the grid -->
+        <DataTemplate x:Key="MediaItemTemplate" x:DataType="models:Photo">
+            <Border CornerRadius="8"
+        BorderBrush="#33FFFFFF"
+        BorderThickness="1">
+                <Grid>
+                    <Image Source="{x:Bind FilePath}"
+               Stretch="UniformToFill"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
+                    <Border Background="#AA000000"
+                CornerRadius="4"
+                Padding="4,2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="4"
+                Visibility="{x:Bind IsVideo}">
+                        <TextBlock Text="&#x25B6;"
+                       FontSize="10"
+                       Foreground="White"/>
+                    </Border>
+                </Grid>
+            </Border>
+            
+        </DataTemplate>
+
+    </Page.Resources>
+
+    <!-- ROOT: full window grid, everything layers inside this -->
+    <Grid>
+
+        <!-- LAYER 1: PHOTO GRID, fills entire window behind the panels -->
+        <ScrollViewer ZoomMode="Disabled"
+                      HorizontalScrollMode="Disabled"
+                      VerticalScrollBarVisibility="Hidden">
+
+            <ItemsRepeater ItemsSource="{x:Bind ViewModel.FilteredMedia}" Margin="72,8,72,8"
+                           ItemTemplate="{StaticResource MediaItemTemplate}">
+                <ItemsRepeater.Layout>
+                    <!-- Adaptive grid: tiles fill available width, min 160px each -->
+                    <UniformGridLayout MinItemWidth="180"
+                   MinItemHeight="180"
+                   ItemsStretch="Fill"
+                   MinColumnSpacing="4"
+                   MinRowSpacing="4"/>
+                </ItemsRepeater.Layout>
+            </ItemsRepeater>
+
+        </ScrollViewer>
+
+        <!-- TEMP: Add Folder button for testing, remove later -->
+        <Button x:Name="TempAddFolderButton"
+        Content="Add Folder"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Bottom"
+        Margin="0,0,0,80"
+        Click="TempAddFolderButton_Click"/>
+
+        <!-- LAYER 2: FLOATING PANELS on top of the photo grid -->
+
+        <!-- PANEL 1: Navigation, top-left, vertical -->
+        <Border x:Name="NavPanel"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="12,12,0,0"
+                Width="52"
+                Height="230"
+                CornerRadius="12"
+                Background="{StaticResource PanelAcrylicBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+
+            <StackPanel Spacing="4"
+                        Padding="6"
+                        HorizontalAlignment="Center">
+
+                <Button ToolTipService.ToolTip="Gallery"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE700;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Folders"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE8B7;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Albums"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE93C;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Videos"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE8B2;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Editor"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE70F;" FontSize="16"/>
+                </Button>
+
+            </StackPanel>
+        </Border>
+
+        <!-- PANEL 2: Cloud and external media, bottom-left -->
+        <Border x:Name="CloudPanel"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Margin="12,0,0,12"
+                Width="52"
+                Height="96"
+                CornerRadius="12"
+                Background="{StaticResource PanelAcrylicBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+
+            <StackPanel Spacing="4"
+                        Padding="6"
+                        HorizontalAlignment="Center">
+
+                <Button ToolTipService.ToolTip="Cloud"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE753;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="External Media"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xEDA2;" FontSize="16"/>
+                </Button>
+
+            </StackPanel>
+        </Border>
+
+        <!-- PANEL 3: Actions, top-center -->
+        <Border x:Name="ActionsPanel"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Margin="0,12,0,0"
+                Height="52"
+                CornerRadius="12"
+                Background="{StaticResource PanelAcrylicBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+
+            <StackPanel Orientation="Horizontal"
+                        Spacing="4"
+                        Padding="6">
+
+                <Button ToolTipService.ToolTip="Edit"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE70F;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Delete"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Copy"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE8C8;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Cut"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE8C6;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Paste"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE77F;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Share"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE72D;" FontSize="16"/>
+                </Button>
+
+                <Button ToolTipService.ToolTip="Metadata"
+                        Width="40" Height="40">
+                    <FontIcon Glyph="&#xE946;" FontSize="16"/>
+                </Button>
+
+            </StackPanel>
+        </Border>
+
+        <!-- PANEL 4: Timeline, right side, full height -->
+        <Border x:Name="TimelinePanel"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Stretch"
+                Margin="0,12,12,12"
+                Width="52"
+                CornerRadius="12"
+                Background="{StaticResource PanelAcrylicBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1">
+
+            <!-- Placeholder text, timeline content added in a future step -->
+            <TextBlock Text="Timeline"
+                       FontSize="10"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center">
+                <TextBlock.RenderTransform>
+                    <RotateTransform Angle="90"/>
+                </TextBlock.RenderTransform>
+            </TextBlock>
+
+        </Border>
+
+        <!-- LOADING OVERLAY: covers everything while IsLoading is true -->
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+              Opacity="0.1"
+              Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}">
+            <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                          Width="48" Height="48"/>
+        </Grid>
+
+    </Grid>
+</Page>

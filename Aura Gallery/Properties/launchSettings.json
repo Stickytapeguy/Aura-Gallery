@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Aura Gallery (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Aura Gallery (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
