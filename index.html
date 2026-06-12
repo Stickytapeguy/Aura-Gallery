@@ -17,11 +17,13 @@
             --border: rgba(255, 255, 255, 0.08);
             --text: #ffffff;
             --muted: rgba(255, 255, 255, 0.55);
-            --accent-a: #6b52ff;
-            --accent-b: #ff3d9a;
-            --accent-c: #00e5ff;
             
-            /* Locked Figma Constraints */
+            /* EXACT RECALIBRATED GRADIENT PALETTE */
+            --accent-b: #DC31E4; /* 0% Step */
+            --accent-a: #CD61FF; /* 52% Step */
+            --accent-c: #40B6FF; /* 100% Step */
+            
+            /* Design System Tokens */
             --radius-btn: 12px;
             --radius-card: 16px;
             --radius-dock: 24px;
@@ -97,18 +99,12 @@
             left: 50%;
             transform: translateX(-50%);
             width: min(980px, 92vw);
-            height: 60px;               /* Absolute layout height constraint */
+            height: 60px;               
             z-index: 100;
-            
-            display: flex;              /* Swapped layout model to flex row */
-            align-items: center;        /* Perfect mathematical vertical centering */
+            display: flex;              
+            align-items: center;        
             justify-content: space-between;
-            
-            /* Equal Padding Math: Container vertical buffer is 12px. 
-               Container right boundary is 12px. With tracking properties, 
-               this locks the space on the Top, Bottom, and Right to exactly 12px. */
             padding: 12px;
-            
             background: var(--surface);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
@@ -117,16 +113,23 @@
             transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s;
         }
 
+        .nav-dock-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: auto;
+        }
+
         .nav-logo {
             font-family: 'Syne', sans-serif;
             font-weight: 800;
             font-size: 1.1rem;
             letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+            background: linear-gradient(135deg, var(--accent-b) 0%, var(--accent-a) 52%, var(--accent-c) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            padding-left: 14px;        /* Matches internal horizontal alignment offset */
+            padding-left: 14px;        
             transition: opacity 0.2s, transform 0.1s;
         }
 
@@ -158,26 +161,19 @@
             align-items: center;
         }
 
-        /* GITHUB BUTTON — Hardened Perimeter Distances */
+        /* TEXT LINK FOR CTA BUTTON IN NAV */
         .nav-cta {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text) !important;
-            height: 36px;               /* 60px dock - 12px top - 12px bottom = 36px exact height */
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
-            margin: 0;                  /* Strips any alignment deviations */
-            border-radius: var(--radius-btn);
-            font-size: 0.85rem !important;
+            color: var(--muted) !important;
+            font-size: 0.9rem !important;
             font-family: 'Comfortaa', sans-serif;
-            transition: background 0.2s, border-color 0.2s, transform 0.1s !important;
+            font-weight: 400;
+            padding-right: 14px;
+            transition: color 0.2s, transform 0.1s !important;
+            display: inline-block;
         }
 
         .nav-cta:hover {
-            background: rgba(255,255,255,0.08) !important;
-            border-color: rgba(255,255,255,0.15) !important;
+            color: var(--text) !important;
         }
 
         .nav-cta:active { transform: scale(0.95) !important; }
@@ -187,7 +183,8 @@
             background: none;
             border: none;
             cursor: pointer;
-            padding-right: 14px;
+            padding: 0;
+            margin: 0;
         }
 
         .burger span {
@@ -255,7 +252,7 @@
         }
 
         .hero-title .grad {
-            background: linear-gradient(135deg, var(--accent-a) 0%, var(--accent-b) 50%, var(--accent-c) 100%);
+            background: linear-gradient(135deg, var(--accent-b) 0%, var(--accent-a) 52%, var(--accent-c) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -271,6 +268,7 @@
             animation: fadeUp 0.8s ease 0.2s both;
         }
 
+        /* HERO BUTTON ELASTIC SPRING ENGINE */
         .hero-buttons {
             display: flex;
             gap: 16px;
@@ -279,53 +277,62 @@
             animation: fadeUp 0.8s ease 0.3s both;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
-            color: white;
-            padding: 14px 32px;
+        .btn-primary, .btn-secondary, .btn-donate {
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 32px;
             border-radius: var(--radius-btn);
-            text-decoration: none;
-            font-weight: 500;
+            font-family: 'Comfortaa', sans-serif;
             font-size: 0.95rem;
-            transition: opacity 0.2s, transform 0.15s;
-            border: none;
-            display: inline-block;
+            font-weight: 400;
+            text-decoration: none;
+            box-sizing: border-box;
+            
+            /* Custom spring curve handles the elastic translate bounce */
+            transition: 
+                transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                opacity 0.15s linear, 
+                background 0.2s ease, 
+                border-color 0.2s ease, 
+                color 0.2s ease;
         }
 
-        .btn-primary:hover { opacity: 0.85; transform: translateY(-2px); }
-        .btn-primary:active { transform: translateY(1px); opacity: 0.9; }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-b) 0%, var(--accent-a) 100%);
+            color: white;
+            font-weight: 500;
+            border: none;
+        }
 
         .btn-secondary {
             background: var(--surface);
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 14px 32px;
-            border-radius: var(--radius-btn);
-            text-decoration: none;
-            font-weight: 400;
-            font-size: 0.95rem;
-            transition: background 0.2s, transform 0.15s;
-            display: inline-block;
         }
-
-        .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: translateY(-2px); }
-        .btn-secondary:active { transform: translateY(1px); }
 
         .btn-donate {
             background: transparent;
             border: 1px solid rgba(255,255,255,0.15);
             color: var(--muted);
-            padding: 14px 32px;
-            border-radius: var(--radius-btn);
-            text-decoration: none;
-            font-weight: 400;
             font-size: 0.85rem;
-            transition: border-color 0.2s, color 0.2s, transform 0.15s;
-            display: inline-block;
+        }
+
+        /* 1. Elevates out with spring overshoot */
+        .btn-primary:hover, .btn-secondary:hover, .btn-donate:hover { 
+            transform: translateY(-4px); 
         }
         
-        .btn-donate:hover { border-color: rgba(255,255,255,0.3); color: var(--text); transform: translateY(-2px); }
-        .btn-donate:active { transform: translateY(1px); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.08); }
+        .btn-donate:hover { border-color: rgba(255,255,255,0.3); color: var(--text); }
+
+        /* 2. Snaps flat back to original Y plane & dims down to 0.8 opacity instantly on click */
+        .btn-primary:active, .btn-secondary:active, .btn-donate:active { 
+            transform: translateY(0px); 
+            opacity: 0.8;
+            transition: transform 0.08s linear, opacity 0.08s linear; /* Fast track collapse */
+        }
 
         /* SCREENSHOT LAYOUT */
         .screenshot-wrap {
@@ -368,7 +375,7 @@
             transform: translateX(-50%);
             width: 60%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-a), var(--accent-b), transparent);
+            background: linear-gradient(90deg, transparent, var(--accent-b), var(--accent-a), transparent);
         }
 
         /* FEATURES INTERACTION MATRIX */
@@ -382,7 +389,7 @@
             font-size: 0.75rem;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--accent-a);
+            color: var(--accent-b);
             margin-bottom: 16px;
             font-weight: 500;
         }
@@ -453,7 +460,7 @@
             top: -1px; left: 10%;
             width: 40%;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-b), transparent);
+            background: linear-gradient(90deg, transparent, var(--accent-a), transparent);
         }
 
         .philosophy-grid {
@@ -562,25 +569,28 @@
             .philosophy-grid { grid-template-columns: 1fr; gap: 42px; }
             .philosophy-inner { padding: 42px 24px; }
 
+            /* HARD REALIGNMENT FOR RESPONSIVE BAR */
             .nav-dock {
                 width: calc(100vw - 24px);
+                display: flex;
                 flex-direction: column;
                 height: auto;
-                max-height: 54px;
-                padding: 16px 20px;
+                max-height: 60px;
+                padding: 12px; 
                 overflow: hidden;
-                align-items: stretch;
+                align-items: stretch; 
             }
 
             .nav-dock-header {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
+                align-items: center; 
                 width: 100%;
+                height: 36px; 
             }
 
-            .nav-logo { padding-left: 0; }
-            .burger { display: block; padding-right: 0; }
+            .nav-logo { padding-left: 14px; }
+            .burger { display: block; padding-right: 14px; }
 
             .nav-links {
                 flex-direction: column;
@@ -611,6 +621,16 @@
             }
 
             .nav-dock.open .nav-cta-wrap { opacity: 1; pointer-events: auto; }
+            
+            .nav-dock.open .nav-cta {
+                transform: none !important;
+            }
+            .nav-dock.open .nav-cta:hover {
+                transform: none !important;
+            }
+            .nav-dock.open .nav-cta:active {
+                transform: scale(0.95) !important;
+            }
         }
     </style>
 </head>
