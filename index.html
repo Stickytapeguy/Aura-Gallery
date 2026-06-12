@@ -6,20 +6,26 @@
     <title>Aura Gallery — Your photos. Nothing else.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Comfortaa:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         a { text-decoration: none; }
 
         :root {
-            --bg: #080810;
-            --surface: rgba(255,255,255,0.04);
-            --border: rgba(255,255,255,0.08);
-            --text: #f0f0f8;
-            --muted: rgba(240,240,248,0.45);
+            --bg: #050508;
+            --surface: rgba(28, 27, 31, 0.50); /* Locked #1C1B1F at 50% opacity */
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #ffffff;
+            --muted: rgba(255, 255, 255, 0.55);
             --accent-a: #6b52ff;
             --accent-b: #ff3d9a;
             --accent-c: #00e5ff;
+            
+            /* Locked Figma Constraints */
+            --radius-btn: 12px;
+            --radius-card: 16px;
+            --radius-dock: 24px;
+            --blur-radius: 55px;
         }
 
         html { scroll-behavior: smooth; }
@@ -27,11 +33,11 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Comfortaa', sans-serif;
             overflow-x: hidden;
         }
 
-        /* BLOBS */
+        /* AMBIENT BLOBS */
         .blob-field {
             position: fixed;
             inset: 0;
@@ -43,8 +49,8 @@
         .blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.25;
+            filter: blur(var(--blur-radius));
+            opacity: 0.22;
             animation: float linear infinite;
         }
 
@@ -84,23 +90,31 @@
             100% { transform: translate(0, 0) scale(1); }
         }
 
-        /* FLOATING NAV DOCK */
+        /* FLOATING NAVIGATION DOCK */
         .nav-dock {
             position: fixed;
             top: 18px;
             left: 50%;
             transform: translateX(-50%);
             width: min(980px, 92vw);
+            height: 60px;               /* Absolute layout height constraint */
             z-index: 100;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            padding: 14px 26px;
-            background: rgba(8, 8, 16, 0.60);
+            
+            display: flex;              /* Swapped layout model to flex row */
+            align-items: center;        /* Perfect mathematical vertical centering */
+            justify-content: space-between;
+            
+            /* Equal Padding Math: Container vertical buffer is 12px. 
+               Container right boundary is 12px. With tracking properties, 
+               this locks the space on the Top, Bottom, and Right to exactly 12px. */
+            padding: 12px;
+            
+            background: var(--surface);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.28);
+            border-radius: var(--radius-dock);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s;
         }
 
         .nav-logo {
@@ -112,13 +126,12 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-decoration: none;
-            display: inline-block;
+            padding-left: 14px;        /* Matches internal horizontal alignment offset */
             transition: opacity 0.2s, transform 0.1s;
         }
 
         .nav-logo:hover { opacity: 0.8; }
-        .nav-logo:active { transform: scale(0.95); opacity: 0.7; }
+        .nav-logo:active { transform: scale(0.95); }
 
         .nav-links {
             display: flex;
@@ -130,7 +143,6 @@
 
         .nav-links a {
             color: var(--muted);
-            text-decoration: none;
             font-size: 0.9rem;
             font-weight: 400;
             transition: color 0.2s, transform 0.1s;
@@ -143,15 +155,23 @@
         .nav-cta-wrap {
             display: flex;
             justify-content: flex-end;
+            align-items: center;
         }
 
+        /* GITHUB BUTTON — Hardened Perimeter Distances */
         .nav-cta {
             background: var(--surface);
             border: 1px solid var(--border);
             color: var(--text) !important;
-            padding: 8px 20px;
-            border-radius: 999px;
+            height: 36px;               /* 60px dock - 12px top - 12px bottom = 36px exact height */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            margin: 0;                  /* Strips any alignment deviations */
+            border-radius: var(--radius-btn);
             font-size: 0.85rem !important;
+            font-family: 'Comfortaa', sans-serif;
             transition: background 0.2s, border-color 0.2s, transform 0.1s !important;
         }
 
@@ -160,15 +180,14 @@
             border-color: rgba(255,255,255,0.15) !important;
         }
 
-        .nav-cta:active {
-            transform: scale(0.95) !important;
-        }
+        .nav-cta:active { transform: scale(0.95) !important; }
 
         .burger {
             display: none;
             background: none;
             border: none;
             cursor: pointer;
+            padding-right: 14px;
         }
 
         .burger span {
@@ -177,15 +196,12 @@
             height: 2px;
             margin: 5px 0;
             background: var(--text);
-            border-radius: 999px;
+            border-radius: var(--radius-btn);
             transition: 0.28s;
         }
 
         /* SECTIONS */
-        section {
-            position: relative;
-            z-index: 1;
-        }
+        section { position: relative; z-index: 1; }
 
         /* HERO */
         .hero {
@@ -203,8 +219,9 @@
             align-items: center;
             gap: 8px;
             background: var(--surface);
+            backdrop-filter: blur(var(--blur-radius));
             border: 1px solid var(--border);
-            border-radius: 999px;
+            border-radius: var(--radius-btn);
             padding: 6px 16px;
             font-size: 0.78rem;
             color: var(--muted);
@@ -266,7 +283,7 @@
             background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
             color: white;
             padding: 14px 32px;
-            border-radius: 12px;
+            border-radius: var(--radius-btn);
             text-decoration: none;
             font-weight: 500;
             font-size: 0.95rem;
@@ -283,7 +300,7 @@
             border: 1px solid var(--border);
             color: var(--text);
             padding: 14px 32px;
-            border-radius: 8px;
+            border-radius: var(--radius-btn);
             text-decoration: none;
             font-weight: 400;
             font-size: 0.95rem;
@@ -299,7 +316,7 @@
             border: 1px solid rgba(255,255,255,0.15);
             color: var(--muted);
             padding: 14px 32px;
-            border-radius: 8px;
+            border-radius: var(--radius-btn);
             text-decoration: none;
             font-weight: 400;
             font-size: 0.85rem;
@@ -310,22 +327,23 @@
         .btn-donate:hover { border-color: rgba(255,255,255,0.3); color: var(--text); transform: translateY(-2px); }
         .btn-donate:active { transform: translateY(1px); }
 
-        /* SCREENSHOT */
+        /* SCREENSHOT LAYOUT */
         .screenshot-wrap {
             position: relative;
             z-index: 1;
-            padding: 0 32px 120px; /* <--- REDUCED SIDE PADDING */
+            padding: 0 32px 120px;
             display: flex;
             justify-content: center;
         }
 
         .screenshot-frame {
             width: 100%;
-            max-width: 1400px; /* <--- EXPANDED FROM 960px */
-            aspect-ratio: 16/9; /* Tweak ratio slightly for wider displays */
-            background: rgba(255,255,255,0.03);
+            max-width: 1400px;
+            aspect-ratio: 16/9;
+            background: var(--surface);
+            backdrop-filter: blur(var(--blur-radius));
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: var(--radius-card);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -341,10 +359,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg,
-                rgba(107,82,255,0.05) 0%,
-                transparent 50%,
-                rgba(255,61,154,0.05) 100%);
+            background: linear-gradient(135deg, rgba(107,82,255,0.05) 0%, transparent 50%, rgba(255,61,154,0.05) 100%);
         }
 
         .screenshot-glow {
@@ -356,7 +371,7 @@
             background: linear-gradient(90deg, transparent, var(--accent-a), var(--accent-b), transparent);
         }
 
-        /* FEATURES */
+        /* FEATURES INTERACTION MATRIX */
         .features {
             padding: 80px 32px 120px;
             max-width: 1400px;
@@ -381,7 +396,6 @@
             margin-bottom: 64px;
         }
 
-        /* GRID - 3 COLUMNS PC DEFAULT */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -390,8 +404,9 @@
 
         .feature-card {
             background: var(--surface);
+            backdrop-filter: blur(var(--blur-radius));
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: var(--radius-card);
             padding: 36px;
             transition: background 0.3s, transform 0.3s;
             position: relative;
@@ -415,7 +430,7 @@
             font-weight: 300;
         }
 
-        /* PHILOSOPHY */
+        /* PHILOSOPHY CONTAINER */
         .philosophy {
             padding: 80px 32px 120px;
             max-width: 1400px;
@@ -424,6 +439,7 @@
 
         .philosophy-inner {
             background: var(--surface);
+            backdrop-filter: blur(var(--blur-radius));
             border: 1px solid var(--border);
             border-radius: 24px;
             padding: 72px;
@@ -468,9 +484,9 @@
             align-items: flex-start;
             gap: 16px;
             padding: 20px 24px;
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.02);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: var(--radius-btn);
             font-size: 0.9rem;
             color: var(--muted);
             line-height: 1.5;
@@ -482,7 +498,7 @@
             margin-top: 1px;
         }
 
-        /* STATUS */
+        /* PIPELINE DEVELOPMENT STATUS */
         .status {
             padding: 80px 32px 120px;
             max-width: 1400px;
@@ -498,8 +514,9 @@
 
         .status-item {
             background: var(--surface);
+            backdrop-filter: blur(var(--blur-radius));
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: var(--radius-btn);
             padding: 20px 24px;
             display: flex;
             align-items: center;
@@ -512,7 +529,7 @@
         .dot-wip  { background: #facc15; box-shadow: 0 0 8px #facc1566; }
         .dot-plan { background: var(--muted); }
 
-        /* ANIMATIONS */
+        /* ENGINE SCROLL KEYFRAMES */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(24px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -521,7 +538,7 @@
         .reveal {
             opacity: 0;
             transform: translateY(32px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .reveal.visible {
@@ -529,120 +546,71 @@
             transform: translateY(0);
         }
 
-        /* -----------------------
-           RESPONSIVE DESIGN 
-           ----------------------- */
-
-        /* TABLET */
+        /* VIEWPORT BREAKPOINTS */
         @media(max-width: 1000px) and (min-width: 761px) {
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        /* MOBILE */
         @media(max-width: 760px) {
-            
-            /* Edge snapping! 12px padding instead of massive empty spaces */
-            .hero, .features, .philosophy, .status, .screenshot-wrap {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            /* Reduced bottom padding to keep scrolling tighter */
+            .hero, .features, .philosophy, .status, .screenshot-wrap { padding-left: 12px; padding-right: 12px; }
             .hero { padding-bottom: 60px; }
             .screenshot-wrap { padding-bottom: 60px; }
             .features { padding-bottom: 60px; padding-top: 40px; }
             .philosophy { padding-bottom: 60px; padding-top: 40px; }
             .status { padding-bottom: 80px; padding-top: 40px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .philosophy-grid { grid-template-columns: 1fr; gap: 42px; }
+            .philosophy-inner { padding: 42px 24px; }
 
-            /* 1 Column on Mobile */
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .philosophy-grid {
-                grid-template-columns: 1fr;
-                gap: 42px;
-            }
-
-            .philosophy-inner {
-                padding: 42px 24px;
-            }
-
-            /* NAV DOCK MOBILE LOGIC */
             .nav-dock {
-                width: calc(100vw - 24px); /* Perfectly respects the 12px margins */
-                grid-template-columns: auto 1fr auto;
-                padding: 16px 20px;
-                max-height: 60px;
-                overflow: hidden;
-                transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), padding 0.6s ease;
+                width: calc(100vw - 24px);
+                flex-direction: column;
+                height: auto;
                 max-height: 54px;
-                align-items: start;
+                padding: 16px 20px;
+                overflow: hidden;
+                align-items: stretch;
+            }
+
+            .nav-dock-header {
+                display: flex;
                 justify-content: space-between;
+                align-items: center;
+                width: 100%;
             }
 
-            .nav-logo {
-                padding-left: 8px;
-                justify-self: start;
-            }
-            .nav-dock.open {
-                max-height: 320px;
-                background: rgba(8, 8, 16, 0.95);
-            }
-
-            .burger {
-                display: block;
-                margin-top: -2px; 
-                justify-self: end;
-                padding-right: 8px;
-            }
+            .nav-logo { padding-left: 0; }
+            .burger { display: block; padding-right: 0; }
 
             .nav-links {
-                grid-column: 1 / -1;
                 flex-direction: column;
                 gap: 16px;
                 margin-top: 24px;
                 padding-top: 24px;
                 border-top: 1px solid var(--border);
                 opacity: 0;
-                transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
                 pointer-events: none;
+                transition: opacity 0.4s ease;
             }
 
             .nav-dock.open {
-                opacity: 1;
-                pointer-events: auto;
-                max-height: 320px;
-
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-
-                background: rgba(8, 8, 16, 0.85);
-                
+                max-height: 340px;
+                background: rgba(8, 8, 16, 0.94);
                 border: 1px solid rgba(255,255,255,0.15);
             }
                 
-            .nav-links {
-                opacity: 1;
-                pointer-events: auto;
-            }
+            .nav-dock.open .nav-links { opacity: 1; pointer-events: auto; }
 
             .nav-cta-wrap {
-                grid-column: 1 / -1;
                 justify-content: center;
                 margin-top: 24px;
                 margin-bottom: 8px;
                 opacity: 0;
-                transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
                 pointer-events: none;
+                transition: opacity 0.4s ease;
             }
 
-            .nav-dock.open .nav-cta-wrap {
-                opacity: 1;
-                pointer-events: auto;
-            }
+            .nav-dock.open .nav-cta-wrap { opacity: 1; pointer-events: auto; }
         }
     </style>
 </head>
@@ -656,13 +624,14 @@
     </div>
 
     <nav class="nav-dock">
-        <a href="#" class="nav-logo">Aura Gallery</a>
-        
-        <button class="burger" id="burgerBtn">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+        <div class="nav-dock-header">
+            <a href="#" class="nav-logo">Aura Gallery</a>
+            <button class="burger" id="burgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
 
         <ul class="nav-links" id="navLinks">
             <li><a href="#features">Features</a></li>
@@ -776,7 +745,6 @@
     </section>
 
     <script>
-        // Scroll reveal logic
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
@@ -788,7 +756,6 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Burger menu toggle logic
         const burger = document.getElementById('burgerBtn');
         const dock = document.querySelector('.nav-dock');
 
