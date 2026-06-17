@@ -14,7 +14,8 @@
         :root {
             --bg: #050508;
             --surface: rgba(28, 27, 31, 0.50); /* Locked #1C1B1F at 50% opacity */
-            --border: rgba(255, 255, 255, 0.08);
+            --surface-solid: #1C1B1F;
+            --border: rgba(239,239,239,0.08);
             --text: #ffffff;
             --muted: rgba(255, 255, 255, 0.55);
             
@@ -27,7 +28,8 @@
             --radius-btn: 12px;
             --radius-card: 16px;
             --radius-dock: 24px;
-            --blur-radius: 55px;
+            --blur-radius: 15px;
+	    --shadow: 0 4px 24px rgba(0,0,0,0.25);
         }
 
         html { scroll-behavior: smooth; }
@@ -106,7 +108,7 @@
             justify-content: space-between;
             padding: 12px;
             background: var(--surface);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(var(--blur-radius));
             border: 1px solid var(--border);
             border-radius: var(--radius-dock);
             box-shadow: 0 8px 40px rgba(0,0,0,0.3);
