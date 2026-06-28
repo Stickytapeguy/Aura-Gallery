@@ -112,7 +112,7 @@
             border: 1px solid var(--border);
             border-radius: var(--radius-dock);
             box-shadow: 0 8px 40px rgba(0,0,0,0.3);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.9s cubic-bezier(0.29, 1.37, 0.74, 1);
         }
 
         .nav-dock-header {
@@ -582,6 +582,9 @@
                 padding: 12px;
                 overflow: hidden;
                 align-items: stretch;
+
+                /* 1. THE CLOSING CURVE (Smaller Bounce) */
+                transition: all 0.7s cubic-bezier(0.29, 1.15, 0.74, 1);
             }
 
             .nav-dock-header {
@@ -605,13 +608,17 @@
                 align-items: center;
                 pointer-events: none;
                 transition: opacity 0.4s ease;
+                padding-top: 24px;
             }
 
             .nav-dock.open {
-                max-height: 340px;
+                max-height: 440px; /* 3. Raised to give the opening bounce more physical headroom */
                 background: rgba(8, 8, 16, 0.94);
                 border: 1px solid rgba(255,255,255,0.15);
                 padding: 16px;
+
+                /* 2. THE OPENING CURVE (Bigger, punchier bounce) */
+                transition: all 0.7s cubic-bezier(1,4,.2,1)
             }
 
             .nav-dock.open .nav-links { opacity: 1; pointer-events: auto; }
