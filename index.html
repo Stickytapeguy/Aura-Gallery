@@ -650,6 +650,10 @@
     .hero img {
         width: 240px !important;
         height: 240px !important;
+		/* THE FIX: Tells the browser to optimize rendering for speed */
+        image-rendering: -webkit-optimize-contrast; 
+        content-visibility: auto; /* Skips rendering if off-screen */
+        transform: translateZ(0); /* Forces GPU acceleration */
     }
 
     /* Maybe tighten the spacing too so it doesn't take up the whole screen */
