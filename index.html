@@ -280,6 +280,13 @@
             animation: fadeUp 0.8s ease 0.3s both;
         }
 
+		/* Add this right below your .btn-primary styles (around line 245) */
+		.hero-buttons .btn-primary {
+		    background: linear-gradient(135deg, var(--accent-b) 0%, var(--accent-a) 52%, var(--accent-c) 100%) !important;
+		    color: #ffffff !important;
+		    border: none !important;
+		}
+		
         .btn-primary, .btn-secondary, .btn-donate {
             height: 48px;
             display: inline-flex;
