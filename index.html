@@ -634,6 +634,19 @@
                 transform: scale(0.95) !important;
             }
         }
+
+        @media(max-width: 760px) {
+    /* Shrink the massive icon for mobile */
+    .hero img {
+        width: 240px !important;
+        height: 240px !important;
+    }
+
+    /* Maybe tighten the spacing too so it doesn't take up the whole screen */
+    .hero .reveal {
+        margin-bottom: 20px !important;
+    }
+}
     </style>
 </head>
 <body>
